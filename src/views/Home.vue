@@ -1,7 +1,9 @@
 <template>
-  <div>
-    <h1>Home Page</h1>
-  </div>
+  <v-container>
+    <div>This is Home page</div>
+  </v-container>
 </template>
-<script>
+
+<script setup lang="ts">
+
 </script>
