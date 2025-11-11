@@ -14,7 +14,7 @@
       </v-col>
 
       <v-col class="text-center mb-4" cols="12">
-        {{ new Date().getFullYear() }} — <strong>My Application</strong>
+        {{ new Date().getFullYear() }} — <strong>My Movies</strong>
       </v-col>
     </v-row>
   </v-footer>

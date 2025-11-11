@@ -1,16 +1,9 @@
 <template>
   <v-app-bar color="primary" prominent>
-    <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
 
-    <v-toolbar-title>My Application</v-toolbar-title>
 
-    <v-spacer></v-spacer>
+    <v-toolbar-title>My Movies</v-toolbar-title>
 
-    <v-btn variant="text" icon="mdi-magnify"></v-btn>
-
-    <v-btn variant="text" icon="mdi-filter"></v-btn>
-
-    <v-btn variant="text" icon="mdi-dots-vertical"></v-btn>
   </v-app-bar>
 
   <v-navigation-drawer v-model="drawer" location="left" temporary>
