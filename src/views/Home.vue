@@ -33,10 +33,16 @@
           lg="3"
         >
           <v-card class="pa-3 cursor-pointer" outlined>
-            <v-tooltip activator="parent" location="top">
-              {{ movie.Title }}
-            </v-tooltip>
-            <v-card-title>{{ movie.Title }}</v-card-title>
+            <v-card-title>
+              <v-tooltip location="top">
+                <template #activator="{ props }">
+                  <span v-bind="props" class="text-truncate d-inline-block" style="max-width: 100%;">
+                    {{ movie.Title }}
+                  </span>
+                </template>
+                {{ movie.Title }}
+              </v-tooltip>
+            </v-card-title>
             <v-card-subtitle>Year: {{ movie.Year }}</v-card-subtitle>
             <v-card-subtitle>ID: {{ movie.imdbID }}</v-card-subtitle>
           </v-card>
@@ -69,6 +75,7 @@ import { onMounted, computed, ref, watch } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
 import { useDisplay } from "vuetify";
+import Swal from "sweetalert2";
 import type { State, Movie } from "../store";
 
 const store = useStore<State>();
@@ -79,66 +86,98 @@ const { smAndDown } = useDisplay();
 
 const searchQuery = ref('');
 const loading = ref(false);
-
-// Initialize page from URL query or store
 const page = ref(Number(route.query.page) || store.state.currentPage || 1);
 
 const movies = computed(() => store.state.movies as Movie[]);
 const totalPages = computed(() => store.state.totalPages);
-
 const totalVisible = computed(() => (smAndDown.value ? 3 : 5));
 
 const updateQuery = (newPage: number) => {
   router.replace({ query: { ...route.query, page: newPage } });
 };
+const showToast = (icon: "success" | "error" | "info", title: string) => {
+  Swal.fire({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 2500,
+    timerProgressBar: true,
+    icon,
+    title,
+  });
+};
 
 const fetchMovies = async () => {
-  loading.value = true;
-  await store.dispatch("changePage", page.value);
-  loading.value = false;
+  try {
+    loading.value = true;
+    await store.dispatch("changePage", page.value);
+  } catch (error) {
+    showToast("error", "Failed to fetch movies. Please try again.");
+  } finally {
+    loading.value = false;
+  }
 };
 
 onMounted(fetchMovies);
 
 const onSearch = async () => {
-  loading.value = true;
-  page.value = 1;
-  updateQuery(1);
+  try {
+    loading.value = true;
+    page.value = 1;
+    updateQuery(1);
 
-  if (searchQuery.value.trim()) {
-    await store.dispatch('searchMovies', searchQuery.value);
-  } else {
-    await store.dispatch('fetchMovies');
+    if (searchQuery.value.trim()) {
+      await store.dispatch("searchMovies", searchQuery.value);
+    } else {
+      await store.dispatch("fetchMovies");
+    }
+  } catch (error) {
+    showToast("error", "Search failed. Please try again.");
+  } finally {
+    loading.value = false;
   }
-  loading.value = false;
 };
 
 const onClear = async () => {
-  searchQuery.value = '';
-  page.value = 1;
-  updateQuery(1);
+  try {
+    searchQuery.value = '';
+    page.value = 1;
+    updateQuery(1);
 
-  loading.value = true;
-  await store.dispatch('fetchMovies');
-  loading.value = false;
+    loading.value = true;
+    await store.dispatch('fetchMovies');
+  } catch (error) {
+    showToast("error", "Failed to reload movies.");
+  } finally {
+    loading.value = false;
+  }
 };
 
 const onPageChange = async (newPage: number) => {
-  page.value = newPage;
-  updateQuery(newPage);
-
-  loading.value = true;
-  await store.dispatch("changePage", newPage);
-  loading.value = false;
+  try {
+    page.value = newPage;
+    updateQuery(newPage);
+    loading.value = true;
+    await store.dispatch("changePage", newPage);
+  } catch (error) {
+    showToast("error", "Failed to load page.");
+  } finally {
+    loading.value = false;
+  }
 };
 
 watch(() => route.query.page, async (newPage) => {
   const pageNumber = Number(newPage) || 1;
   if (pageNumber !== page.value) {
-    page.value = pageNumber;
-    loading.value = true;
-    await store.dispatch("changePage", pageNumber);
-    loading.value = false;
+    try {
+      page.value = pageNumber;
+      loading.value = true;
+      await store.dispatch("changePage", pageNumber);
+    } catch (error) {
+      showToast("error", "Failed to change page.");
+    } finally {
+      loading.value = false;
+    }
   }
 });
 </script>

@@ -46,6 +46,7 @@ export default createStore<State>({
         commit("SET_TOTAL_PAGES", response.data.total_pages);
       } catch (error) {
         console.error("Error fetching movies:", error);
+        throw error;
       }
     },
     async changePage({ commit, dispatch }: any, page: number) {
