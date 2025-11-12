@@ -8,6 +8,10 @@
 }
 
 .v-pagination {
+  @media(min-width:768px){
+    padding:4px;
+  }
+  
   border: 1px solid #5e4be3;
   border-radius: 8px;
   background-color: #fff;
@@ -22,4 +26,29 @@
       color: white;
     }
   }
+  .v-pagination__item {
+    padding: 0;
+    margin: 4px 0;
+  }
+  .v-pagination__prev .v-btn, .v-pagination__next .v-btn, .v-pagination__item .v-btn {
+    height: 30px;
+  }
+  .v-pagination__item .v-btn {
+    padding: 4px;
+  }
+  @media(max-width:768px){
+    .v-pagination__item .v-btn {
+      padding: 0;
+      max-width: 30px;
+      height: 30px;
+    }
+    .v-pagination__item .v-btn .v-btn__content {
+      color: #5e4be3;
+    }
+    .v-pagination__prev, .v-pagination__next  {
+      margin: 4px 0;
+    }
+    
+  }
 }
+
