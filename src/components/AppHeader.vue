@@ -1,5 +1,5 @@
 <template>
-  <div class="px-4 gradiant d-flex align-center text-h5">
+  <div class="gradiant d-flex align-center text-h5">
     <v-container>My Movies</v-container>
   </div>
 

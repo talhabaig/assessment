@@ -1,6 +1,5 @@
 <template>
-  <v-container class="pa-6">
-
+  <v-container class="pa-4 pa-md-6">
     <div class="d-flex justify-end mb-4">
       <v-text-field
         v-model="searchQuery"
@@ -49,7 +48,7 @@
       <v-pagination
         v-model="page"
         :length="totalPages"
-        total-visible="5"
+        :total-visible="totalVisible"
         size="small"
         rounded
         color="primary"
@@ -66,11 +65,14 @@
 import { onMounted, computed, ref, watch } from "vue";
 import { useStore } from "vuex";
 import { useRoute, useRouter } from "vue-router";
+import { useDisplay } from "vuetify";
 import type { State, Movie } from "../store";
 
 const store = useStore<State>();
 const route = useRoute();
 const router = useRouter();
+
+const { smAndDown } = useDisplay();
 
 const searchQuery = ref('');
 const loading = ref(false);
@@ -81,7 +83,8 @@ const page = ref(Number(route.query.page) || store.state.currentPage || 1);
 const movies = computed(() => store.state.movies as Movie[]);
 const totalPages = computed(() => store.state.totalPages);
 
-// Helper: update URL query without reloading
+const totalVisible = computed(() => (smAndDown.value ? 3 : 5));
+
 const updateQuery = (newPage: number) => {
   router.replace({ query: { ...route.query, page: newPage } });
 };
@@ -107,7 +110,6 @@ const onSearch = async () => {
   loading.value = false;
 };
 
-// Clear search
 const onClear = async () => {
   searchQuery.value = '';
   page.value = 1;
@@ -118,7 +120,6 @@ const onClear = async () => {
   loading.value = false;
 };
 
-// Pagination change
 const onPageChange = async (newPage: number) => {
   page.value = newPage;
   updateQuery(newPage);
