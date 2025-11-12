@@ -1,0 +1,25 @@
+.gradiant {
+  background: linear-gradient(to left, #1f1740, #5e4be3);
+  color: white;
+
+  &__text {
+    font-weight: bold;
+  }
+}
+
+.v-pagination {
+  border: 1px solid #5e4be3;
+  border-radius: 8px;
+  background-color: #fff;
+
+  &__item {
+    padding: 6px 10px;
+    cursor: pointer;
+    color: #5e4be3;
+
+    &--active {
+      background-color: #5e4be3;
+      color: white;
+    }
+  }
+}

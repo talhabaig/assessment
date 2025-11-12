@@ -1,10 +1,7 @@
 <template>
-  <v-app-bar color="primary" prominent>
-
-
-    <v-toolbar-title>My Movies</v-toolbar-title>
-
-  </v-app-bar>
+  <div class="px-4 gradiant d-flex align-center text-h5">
+    <v-container>My Movies</v-container>
+  </div>
 
   <v-navigation-drawer v-model="drawer" location="left" temporary>
     <v-list>
