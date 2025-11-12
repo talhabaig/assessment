@@ -11,7 +11,6 @@ export interface Movie {
 export interface State {
   movies: Movie[];
   currentPage: number;
-  perPage: number;
   totalPages: number;
 }
 
@@ -19,7 +18,6 @@ export default createStore<State>({
   state: {
     movies: [] as Movie[],
     currentPage: 1,
-    perPage: 5,
     totalPages: 1,
   },
   mutations: {
@@ -53,6 +51,23 @@ export default createStore<State>({
     async changePage({ commit, dispatch }: any, page: number) {
       commit("SET_CURRENT_PAGE", page);
       await dispatch("fetchMovies");
+    },
+    async searchMovies({ commit }: any, query: string) {
+      try {
+        const apiUrl: string = import.meta.env.VITE_MOVIES_API as string;
+        const response = await axios.get(apiUrl, {
+          params: {
+            Title: query,
+            page: 1,
+          },
+        });
+
+        commit("SET_MOVIES", response.data.data || []);
+        commit("SET_TOTAL_PAGES", response.data.total_pages || 1);
+        commit("SET_CURRENT_PAGE", 1);
+      } catch (error) {
+        console.error("Error searching movies:", error);
+      }
     },
   },
   getters: {
