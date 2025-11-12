@@ -32,7 +32,10 @@
           md="4"
           lg="3"
         >
-          <v-card class="pa-3" outlined>
+          <v-card class="pa-3 cursor-pointer" outlined>
+            <v-tooltip activator="parent" location="top">
+              {{ movie.Title }}
+            </v-tooltip>
             <v-card-title>{{ movie.Title }}</v-card-title>
             <v-card-subtitle>Year: {{ movie.Year }}</v-card-subtitle>
             <v-card-subtitle>ID: {{ movie.imdbID }}</v-card-subtitle>
